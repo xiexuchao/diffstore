@@ -1,0 +1,18 @@
+#Config File
+
+size of scm = 1;
+size of ssd = 1024;
+size of hdd = 51200;
+size of chunk = 256;
+
+window type = 0;
+window size = 20480;	#MB
+
+threshold rw = 0.85;	#R/W
+threshold cbr = 0.8;
+threshold car = 0.8;
+threshold size = 4096;	#KB
+
+size of stream = 16;
+size of stride = 64;	#Sectors
+size of interval = 100; #ms
