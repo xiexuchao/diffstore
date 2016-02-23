@@ -2,25 +2,18 @@
 
 int main()
 {
-	//analyze("F:\\Netapp Trace\\UMNtracex.csv","config1.txt","UMNtracex.txt");
-	analyze("F:\\Netapp Trace\\UMNtrace1.csv","config1.txt","UMNtrace1_22.txt");
-	//analyze("F:\\Netapp Trace\\UMNtrace2.csv","config1.txt","UMNtrace2_11111.txt");
-	//analyze("F:\\Netapp Trace\\UMNtrace2.csv","config2.txt","UMNtrace2_2.txt");
+	analyze("F:\\Netapp Trace\\trace\\UMNtrace1.csv","F:\\Netapp Trace\\config\\config1.txt","F:\\Netapp Trace\\result\\UMNtrace1_1.txt");
+	analyze("F:\\Netapp Trace\\trace\\UMNtrace2.csv","F:\\Netapp Trace\\config\\config1.txt","F:\\Netapp Trace\\result\\UMNtrace2_1.txt");
+	analyze("F:\\Netapp Trace\\trace\\UMNtrace3.csv","F:\\Netapp Trace\\config\\config1.txt","F:\\Netapp Trace\\result\\UMNtrace3_1.txt");
 	
-	
-	//analyze("F:\\Netapp Trace\\UMNtrace3.csv","UMNtrace3.txt");
-	//analyze("trace.csv","output.txt");
-	//analyze("F:\\MSR Trace\\mds_0.csv","mds_0.txt");
-	//analyze("F:\\MSR Trace\\mds_1.csv","mds_1.txt");
+	analyze("F:\\Netapp Trace\\trace\\UMNtrace1.csv","F:\\Netapp Trace\\config\\config2.txt","F:\\Netapp Trace\\result\\UMNtrace1_2.txt");
+	analyze("F:\\Netapp Trace\\trace\\UMNtrace2.csv","F:\\Netapp Trace\\config\\config2.txt","F:\\Netapp Trace\\result\\UMNtrace2_2.txt");
+	analyze("F:\\Netapp Trace\\trace\\UMNtrace3.csv","F:\\Netapp Trace\\config\\config2.txt","F:\\Netapp Trace\\result\\UMNtrace3_2.txt");
 
-	//analyze("F:\\MSR Trace\\web_0.csv","web_0.txt");
+	analyze("F:\\Netapp Trace\\trace\\UMNtrace1.csv","F:\\Netapp Trace\\config\\config3.txt","F:\\Netapp Trace\\result\\UMNtrace1_3.txt");
+	analyze("F:\\Netapp Trace\\trace\\UMNtrace2.csv","F:\\Netapp Trace\\config\\config3.txt","F:\\Netapp Trace\\result\\UMNtrace2_3.txt");
+	analyze("F:\\Netapp Trace\\trace\\UMNtrace3.csv","F:\\Netapp Trace\\config\\config3.txt","F:\\Netapp Trace\\result\\UMNtrace3_3.txt");
 
-	//analyze("F:\\MSR Trace\\prxy_0.csv","prxy_0.txt");
-	//analyze("F:\\MSR Trace\\prn_0.csv","prn_0_output.txt");
-	//analyze("F:\\MSR Trace\\prxy_0.csv","prxy_0_output.txt");
-	//analyze("F:\\MSR Trace\\src1_2.csv","src1_2_output.txt");
-	//analyze("F:\\MSR Trace\\proj_1.csv","proj_1_output.txt");
-	//analyze("F:\\MSR Trace\\src1_0.csv","src1_0_output.txt");
 	return 1;
 }
 
@@ -78,7 +71,6 @@ int analyze(char *trace,char *config,char *output)
 						/*Inactive*/
 						pool->chunk[i].pattern=PATTERN_INACTIVE;
 					}
-					//if(pool->chunk[i].req_sum_all>=(req_in_window/chunk_num)*1000)
 					else if(pool->chunk[i].req_sum_all>=(req_in_window/pool->chunk_win)*2)
 					{
 						/*INTENSIVE*/
