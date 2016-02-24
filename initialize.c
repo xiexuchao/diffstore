@@ -40,6 +40,10 @@ void load_parameters(struct pool_info *pool,char *config)
 			sscanf(buf+value,"%lf",&pool->threshold_car);
 		else if(strcmp(buf,"threshold size")==0)
 			sscanf(buf+value,"%d",&pool->threshold_size);
+		else if(strcmp(buf,"threshold inactive")==0)
+			sscanf(buf+value,"%d",&pool->threshold_inactive);
+		else if(strcmp(buf,"threshold intensive")==0)
+			sscanf(buf+value,"%d",&pool->threshold_intensive);
 		else if(strcmp(buf,"size of stream")==0)
 			sscanf(buf+value,"%d",&pool->size_stream);
 		else if(strcmp(buf,"size of stride")==0)
@@ -51,7 +55,7 @@ void load_parameters(struct pool_info *pool,char *config)
 	fclose(pool->file_config);
 }
 
-void initialize(struct pool_info *pool,char *trace,char *output)
+void initialize(struct pool_info *pool,char *trace,char *output,char *log)
 {
 	unsigned int i,j;
 	
@@ -90,9 +94,13 @@ void initialize(struct pool_info *pool,char *trace,char *output)
 	{
 		pool->window_time[i]=0;
 		pool->chunk_access[i]=0;
+
+		pool->pattern_non_access[i]=0;
 		pool->pattern_inactive[i]=0;
-		pool->pattern_intensive[i]=0;
-		pool->pattern_sequential[i]=0;
+		pool->pattern_seq_intensive[i]=0;
+		pool->pattern_seq_less_intensive[i]=0;
+		pool->pattern_random_intensive[i]=0;
+		pool->pattern_random_less_intensive[i]=0;
 	}
 
 	pool->chunk=(struct chunk_info *)malloc(sizeof(struct chunk_info)*pool->chunk_sum);
@@ -107,16 +115,20 @@ void initialize(struct pool_info *pool,char *trace,char *output)
 	pool->map=(struct map_info *)malloc(sizeof(struct map_info)*pool->chunk_sum);
 	alloc_assert(pool->map,"pool->map");
 	memset(pool->map,0,sizeof(struct map_info));
-	pool->record=(struct record_info *)malloc(sizeof(struct record_info)*pool->chunk_sum);
-	alloc_assert(pool->record,"pool->record");
-	memset(pool->record,0,sizeof(struct record_info)*pool->chunk_sum);
+	pool->record_win=(struct record_info *)malloc(sizeof(struct record_info)*pool->chunk_sum);
+	alloc_assert(pool->record_win,"pool->record_win");
+	memset(pool->record_win,0,sizeof(struct record_info)*pool->chunk_sum);
+	pool->record_all=(struct record_info *)malloc(sizeof(struct record_info)*pool->chunk_sum);
+	alloc_assert(pool->record_all,"pool->record_all");
+	memset(pool->record_all,0,sizeof(struct record_info)*pool->chunk_sum);
 	
 	printf("------------Initializing...chunk_sum=%d------------\n",pool->chunk_sum);
 	for(i=0;i<pool->chunk_sum;i++)
 	{
 		pool->map[i].lcn=i;
 		pool->map[i].pcn=i;
-		pool->record[i].accessed=0;
+		pool->record_win[i].accessed=0;
+		pool->record_all[i].accessed=0;
 
 		for(j=0;j<SIZE_ARRAY;j++)
 		{
@@ -163,6 +175,8 @@ void initialize(struct pool_info *pool,char *trace,char *output)
 
 	strcpy(pool->filename_trace,trace);
 	strcpy(pool->filename_output,output);
+	strcpy(pool->filename_log,log);
 	pool->file_trace=fopen(pool->filename_trace,"r");
 	pool->file_output=fopen(pool->filename_output,"w");
+	pool->file_log=fopen(pool->filename_log,"w");
 }

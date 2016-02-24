@@ -1,28 +1,23 @@
 #include "pool.h"
 
-int main()
+void main()
 {
-	analyze("F:\\Netapp Trace\\trace\\UMNtrace1.csv","F:\\Netapp Trace\\config\\config1.txt","F:\\Netapp Trace\\result\\UMNtrace1_1.txt");
-	analyze("F:\\Netapp Trace\\trace\\UMNtrace2.csv","F:\\Netapp Trace\\config\\config1.txt","F:\\Netapp Trace\\result\\UMNtrace2_1.txt");
-	analyze("F:\\Netapp Trace\\trace\\UMNtrace3.csv","F:\\Netapp Trace\\config\\config1.txt","F:\\Netapp Trace\\result\\UMNtrace3_1.txt");
+	//analyze("F:\\Netapp Trace\\trace\\UMNtracex.csv","F:\\Netapp Trace\\config\\config1.txt","F:\\Netapp Trace\\result\\UMNtracex.txt","F:\\Netapp Trace\\log\\UMNtracex.log");
+	analyze("F:\\Netapp Trace\\trace\\UMNtrace1.csv","F:\\Netapp Trace\\config\\config1.txt","F:\\Netapp Trace\\result\\UMNtrace1_1.txt","F:\\Netapp Trace\\log\\UMNtrace1_1.log");
+	analyze("F:\\Netapp Trace\\trace\\UMNtrace2.csv","F:\\Netapp Trace\\config\\config2.txt","F:\\Netapp Trace\\result\\UMNtrace2_2.txt","F:\\Netapp Trace\\log\\UMNtrace2_2.log");
+	analyze("F:\\Netapp Trace\\trace\\UMNtrace3.csv","F:\\Netapp Trace\\config\\config1.txt","F:\\Netapp Trace\\result\\UMNtrace3_1.txt","F:\\Netapp Trace\\log\\UMNtrace3_1.log");
 	
-	analyze("F:\\Netapp Trace\\trace\\UMNtrace1.csv","F:\\Netapp Trace\\config\\config2.txt","F:\\Netapp Trace\\result\\UMNtrace1_2.txt");
-	analyze("F:\\Netapp Trace\\trace\\UMNtrace2.csv","F:\\Netapp Trace\\config\\config2.txt","F:\\Netapp Trace\\result\\UMNtrace2_2.txt");
-	analyze("F:\\Netapp Trace\\trace\\UMNtrace3.csv","F:\\Netapp Trace\\config\\config2.txt","F:\\Netapp Trace\\result\\UMNtrace3_2.txt");
-
-	analyze("F:\\Netapp Trace\\trace\\UMNtrace1.csv","F:\\Netapp Trace\\config\\config3.txt","F:\\Netapp Trace\\result\\UMNtrace1_3.txt");
-	analyze("F:\\Netapp Trace\\trace\\UMNtrace2.csv","F:\\Netapp Trace\\config\\config3.txt","F:\\Netapp Trace\\result\\UMNtrace2_3.txt");
-	analyze("F:\\Netapp Trace\\trace\\UMNtrace3.csv","F:\\Netapp Trace\\config\\config3.txt","F:\\Netapp Trace\\result\\UMNtrace3_3.txt");
-
-	return 1;
+	analyze("F:\\Netapp Trace\\trace\\UMNtrace1.csv","F:\\Netapp Trace\\config\\config3.txt","F:\\Netapp Trace\\result\\UMNtrace1_3.txt","F:\\Netapp Trace\\log\\UMNtrace1_3.log");
+	analyze("F:\\Netapp Trace\\trace\\UMNtrace2.csv","F:\\Netapp Trace\\config\\config4.txt","F:\\Netapp Trace\\result\\UMNtrace2_4.txt","F:\\Netapp Trace\\log\\UMNtrace2_4.log");
+	analyze("F:\\Netapp Trace\\trace\\UMNtrace3.csv","F:\\Netapp Trace\\config\\config3.txt","F:\\Netapp Trace\\result\\UMNtrace3_3.txt","F:\\Netapp Trace\\log\\UMNtrace3_3.log");
 }
 
-int analyze(char *trace,char *config,char *output)
+int analyze(char *trace,char *config,char *output,char *log)
 {
 	unsigned int i,chunk_num;
 	unsigned int size_in_window=0,req_in_window=0,chk_in_window=0;
 	long double time_in_window=0;
-	double i_inactive=0,i_sequential=0,i_intensive=0;
+	double i_non_access=0,i_inactive=0,i_seq_intensive=0,i_seq_less_intensive=0,i_random_intensive=0,i_random_less_intensive=0;
 
 	struct pool_info *pool;
 	pool=(struct pool_info *)malloc(sizeof(struct pool_info));
@@ -30,7 +25,7 @@ int analyze(char *trace,char *config,char *output)
 	memset(pool,0,sizeof(struct pool_info));
 
 	load_parameters(pool,config);
-	initialize(pool,trace,output);
+	initialize(pool,trace,output,log);
 
 #ifdef _NETAPP_TRACE_
 	chunk_num=get_range_netapp(pool);
@@ -64,78 +59,115 @@ int analyze(char *trace,char *config,char *output)
 
 				for(i=pool->chunk_min;i<=pool->chunk_max;i++)
 				{
-					if(pool->chunk[i].req_sum_all<1)//inactive
+					if(pool->chunk[i].req_sum_all==0)//no access
 					{
-						/*INACTIVE*/
-						i_inactive++;
-						/*Inactive*/
-						pool->chunk[i].pattern=PATTERN_INACTIVE;
+						/*No Access*/
+						if(pool->record_all[i].accessed!=0)
+						{
+							i_non_access++;
+						}
+						pool->chunk[i].pattern=PATTERN_NON_ACCESS;
 					}
-					else if(pool->chunk[i].req_sum_all>=(req_in_window/pool->chunk_win)*2)
+					else if(pool->chunk[i].req_sum_all<pool->threshold_inactive)//inactive
 					{
-						/*INTENSIVE*/
-						i_intensive++;
+						/*Inactive*/
+						i_inactive++;
 						if(((long double)pool->chunk[i].req_sum_read/(long double)pool->chunk[i].req_sum_all)>=pool->threshold_rw)
 						{
-							/*Intensive Read*/
-							pool->chunk[i].pattern=PATTERN_INTENSIVE_READ;
+							/*Inactive Read*/
+							pool->chunk[i].pattern=PATTERN_INACTIVE_R;
 						}
 						else if(((long double)pool->chunk[i].req_sum_write/(long double)pool->chunk[i].req_sum_all)>=pool->threshold_rw)
 						{
-							/*Intensive Write*/
-							pool->chunk[i].pattern=PATTERN_INTENSIVE_WRITE;
+							/*Inactive Write*/
+							pool->chunk[i].pattern=PATTERN_INACTIVE_W;
 						}
-						else
-						{
-							/*Intensive Hybrid*/
-							pool->chunk[i].pattern=PATTERN_INTENSIVE_HYBRID;
+						else{
+							/*Inactive Hybrid*/
+							pool->chunk[i].pattern=PATTERN_INACTIVE_H;
 						}
 					}
-					else if((pool->chunk[i].seq_size_all/pool->chunk[i].req_size_all)>=pool->threshold_cbr)//
+					else if((pool->chunk[i].seq_size_all/pool->chunk[i].req_size_all)>=pool->threshold_cbr &&
+						((long double)pool->chunk[i].seq_sum_all/(long double)pool->chunk[i].req_sum_all)>=pool->threshold_car)
 					{
 						/*SEQUENTIAL*/
-						if(((long double)pool->chunk[i].seq_sum_all/(long double)pool->chunk[i].req_sum_all)>=pool->threshold_car)
+						i_seq_intensive++;
+						/*Sequential Intensive*/
+						if(pool->chunk[i].req_sum_all>=(req_in_window/pool->chunk_win)*pool->threshold_intensive)
 						{
-							i_sequential++;
 							if(((long double)pool->chunk[i].req_sum_read/(long double)pool->chunk[i].req_sum_all)>=pool->threshold_rw)
 							{
-								/*Sequential Read*/
-								pool->chunk[i].pattern=PATTERN_SEQUENTIAL_READ;
+								/*Sequential Intensive Read*/
+								pool->chunk[i].pattern=PATTERN_SEQ_INTENSIVE_R;
 							}
 							else if(((long double)pool->chunk[i].req_sum_write/(long double)pool->chunk[i].req_sum_all)>=pool->threshold_rw)
 							{
-								/*Sequential Write*/
-								pool->chunk[i].pattern=PATTERN_SEQUENTIAL_WRITE;
+								/*Sequential Intensive Write*/
+								pool->chunk[i].pattern=PATTERN_SEQ_INTENSIVE_W;
 							}
 							else
 							{
-								/*Intensive Hybrid*/
-								pool->chunk[i].pattern=PATTERN_SEQUENTIAL_HYBRID;
+								/*Sequential Intensive Hybrid*/
+								pool->chunk[i].pattern=PATTERN_SEQ_INTENSIVE_H;
 							}
 						}
-						else
-						{
-							/*Semi-Sequential*/
-							pool->chunk[i].pattern=PATTERN_SEMI_SEQUENTIAL;
+						else{
+							i_seq_less_intensive++;
+							if(((long double)pool->chunk[i].req_sum_read/(long double)pool->chunk[i].req_sum_all)>=pool->threshold_rw)
+							{
+								/*Sequential Less Intensive Read*/
+								pool->chunk[i].pattern=PATTERN_SEQ_LESS_INTENSIVE_R;
+							}
+							else if(((long double)pool->chunk[i].req_sum_write/(long double)pool->chunk[i].req_sum_all)>=pool->threshold_rw)
+							{
+								/*Sequential Less Intensive Write*/
+								pool->chunk[i].pattern=PATTERN_SEQ_LESS_INTENSIVE_W;
+							}
+							else
+							{
+								/*Sequential Less Intensive Hybrid*/
+								pool->chunk[i].pattern=PATTERN_SEQ_LESS_INTENSIVE_H;
+							}
 						}
 					}
-					
-					else
-					{
-						if(((long double)pool->chunk[i].req_sum_read/(long double)pool->chunk[i].req_sum_all)>=pool->threshold_rw)
+					else{
+						/*Random*/
+						i_random_intensive++;
+						if(pool->chunk[i].req_sum_all>=(req_in_window/pool->chunk_win)*pool->threshold_intensive)
 						{
-							/*Random Read*/
-							pool->chunk[i].pattern=PATTERN_RANDOM_READ;
+							if(((long double)pool->chunk[i].req_sum_read/(long double)pool->chunk[i].req_sum_all)>=pool->threshold_rw)
+							{
+								/*Random Intensive Read*/
+								pool->chunk[i].pattern=PATTERN_RANDOM_INTENSIVE_R;
+							}
+							else if(((long double)pool->chunk[i].req_sum_write/(long double)pool->chunk[i].req_sum_all)>=pool->threshold_rw)
+							{
+								/*Random Intensive Write*/
+								pool->chunk[i].pattern=PATTERN_RANDOM_INTENSIVE_W;
+							}
+							else
+							{
+								/*Random Intensive Hybrid*/
+								pool->chunk[i].pattern=PATTERN_RANDOM_INTENSIVE_H;
+							}
 						}
-						else if(((long double)pool->chunk[i].req_sum_write/(long double)pool->chunk[i].req_sum_all)>=pool->threshold_rw)
-						{
-							/*Random Write*/
-							pool->chunk[i].pattern=PATTERN_RANDOM_WRITE;
-						}
-						else
-						{
-							/*Random Hybrid*/
-							pool->chunk[i].pattern=PATTERN_RANDOM_HYBRID;
+						else{
+							i_random_less_intensive++;
+							if(((long double)pool->chunk[i].req_sum_read/(long double)pool->chunk[i].req_sum_all)>=pool->threshold_rw)
+							{
+								/*Random Less Intensive Read*/
+								pool->chunk[i].pattern=PATTERN_RANDOM_LESS_INTENSIVE_R;
+							}
+							else if(((long double)pool->chunk[i].req_sum_write/(long double)pool->chunk[i].req_sum_all)>=pool->threshold_rw)
+							{
+								/*Random Less Intensive Write*/
+								pool->chunk[i].pattern=PATTERN_RANDOM_LESS_INTENSIVE_W;
+							}
+							else
+							{
+								/*Random Less Intensive Hybrid*/
+								pool->chunk[i].pattern=PATTERN_RANDOM_LESS_INTENSIVE_H;
+							}
 						}
 					}
 					//Only record limited information (the first SIZE_ARRY windows)
@@ -143,10 +175,15 @@ int analyze(char *trace,char *config,char *output)
 					{
 						pool->chunk[i].history_pattern[pool->window_sum]=pool->chunk[i].pattern;
 
-						pool->pattern_inactive[pool->window_sum]=i_inactive/(double)chunk_num;
-						pool->pattern_intensive[pool->window_sum]=i_intensive/(double)chunk_num;
-						pool->pattern_sequential[pool->window_sum]=i_sequential/(double)chunk_num;
+						pool->pattern_non_access[pool->window_sum]=i_non_access/(double)pool->chunk_all;
+						pool->pattern_inactive[pool->window_sum]=i_inactive/(double)pool->chunk_all;
+						pool->pattern_seq_intensive[pool->window_sum]=i_seq_intensive/(double)pool->chunk_all;
+						pool->pattern_seq_less_intensive[pool->window_sum]=i_seq_less_intensive/(double)pool->chunk_all;
+						pool->pattern_random_intensive[pool->window_sum]=i_random_intensive/(double)pool->chunk_all;
+						pool->pattern_random_less_intensive[pool->window_sum]=i_random_less_intensive/(double)pool->chunk_all;
 					}
+					
+					print_log(pool,i);	//print info of each chunk in this window to log file.
 					/*Initialize the statistics in each chunk*/
 					pool->chunk[i].req_sum_all=0;
 					pool->chunk[i].req_sum_read=0;
@@ -165,7 +202,7 @@ int analyze(char *trace,char *config,char *output)
 					pool->chunk[i].seq_size_read=0;
 					pool->chunk[i].seq_size_write=0;
 				}//for
-
+				
 				/*Update the pool info*/
 				pool->window_sum++;
 				if(pool->window_sum%20==0)
@@ -177,12 +214,16 @@ int analyze(char *trace,char *config,char *output)
 				size_in_window=0;
 				req_in_window=0;
 				time_in_window=0;
+				
+				i_non_access=0;
 				i_inactive=0;
-				i_sequential=0;
-				i_intensive=0;
+				i_seq_intensive=0;
+				i_seq_less_intensive=0;
+				i_random_intensive=0;
+				i_random_less_intensive=0;
 
 				//accessed chunks in each window
-				memset(pool->record,0,sizeof(struct record_info)*pool->chunk_sum);
+				memset(pool->record_win,0,sizeof(struct record_info)*pool->chunk_sum);
 				printf("pool->chunk_win=%d\n",pool->chunk_win);
 				pool->chunk_win=0;
 			}//if
@@ -193,6 +234,7 @@ int analyze(char *trace,char *config,char *output)
 
 	fclose(pool->file_trace);
 	fclose(pool->file_output);
+	fclose(pool->file_log);
 	
 	free(pool->chunk);
 	free(pool->map);
