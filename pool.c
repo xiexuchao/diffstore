@@ -244,7 +244,7 @@ void print_statistics(struct pool_info *pool)
 	fprintf(pool->file_output,"%-30s	%lf\n","Threshold for R/W",pool->threshold_rw);
 	fprintf(pool->file_output,"%-30s	%lf\n","Threshold for Seq.CBR(Byte)",pool->threshold_cbr);
 	fprintf(pool->file_output,"%-30s	%lf\n","Threshold for Seq.CAR(Access)",pool->threshold_car);
-	fprintf(pool->file_output,"%-30s	%d\n","Threshold for Seq.size (KB)",pool->threshold_size);
+	fprintf(pool->file_output,"%-30s	%d\n","Threshold for Seq.size (KB)",pool->threshold_size/2);
 	fprintf(pool->file_output,"%-30s	%d\n","Threshold for Inactive",pool->threshold_inactive);
 	fprintf(pool->file_output,"%-30s	%d\n","Threshold for Intensive",pool->threshold_intensive);
 	fflush(pool->file_output);

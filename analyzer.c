@@ -2,14 +2,17 @@
 
 void main()
 {
-	//analyze("F:\\Netapp Trace\\trace\\UMNtracex.csv","F:\\Netapp Trace\\config\\config1.txt","F:\\Netapp Trace\\result\\UMNtracex.txt","F:\\Netapp Trace\\log\\UMNtracex.log");
-	analyze("F:\\Netapp Trace\\trace\\UMNtrace1.csv","F:\\Netapp Trace\\config\\config1.txt","F:\\Netapp Trace\\result\\UMNtrace1_1.txt","F:\\Netapp Trace\\log\\UMNtrace1_1.log");
-	analyze("F:\\Netapp Trace\\trace\\UMNtrace2.csv","F:\\Netapp Trace\\config\\config2.txt","F:\\Netapp Trace\\result\\UMNtrace2_2.txt","F:\\Netapp Trace\\log\\UMNtrace2_2.log");
-	analyze("F:\\Netapp Trace\\trace\\UMNtrace3.csv","F:\\Netapp Trace\\config\\config1.txt","F:\\Netapp Trace\\result\\UMNtrace3_1.txt","F:\\Netapp Trace\\log\\UMNtrace3_1.log");
-	
-	analyze("F:\\Netapp Trace\\trace\\UMNtrace1.csv","F:\\Netapp Trace\\config\\config3.txt","F:\\Netapp Trace\\result\\UMNtrace1_3.txt","F:\\Netapp Trace\\log\\UMNtrace1_3.log");
-	analyze("F:\\Netapp Trace\\trace\\UMNtrace2.csv","F:\\Netapp Trace\\config\\config4.txt","F:\\Netapp Trace\\result\\UMNtrace2_4.txt","F:\\Netapp Trace\\log\\UMNtrace2_4.log");
-	analyze("F:\\Netapp Trace\\trace\\UMNtrace3.csv","F:\\Netapp Trace\\config\\config3.txt","F:\\Netapp Trace\\result\\UMNtrace3_3.txt","F:\\Netapp Trace\\log\\UMNtrace3_3.log");
+	//analyze("F:\\Netapp Trace\\Jerry\\UMNtrace1_13_5.csv","F:\\Netapp Trace\\config\\config1.txt","F:\\Netapp Trace\\Jerry\\UMNtrace1_13_5.txt","F:\\Netapp Trace\\Jerry\\UMNtrace1_13_5.log");
+	//analyze("F:\\Netapp Trace\\Jerry\\UMNtrace2_21_18.csv","F:\\Netapp Trace\\config\\config1.txt","F:\\Netapp Trace\\Jerry\\UMNtrace2_21_18.txt","F:\\Netapp Trace\\Jerry\\UMNtrace2_21_18.log");
+	analyze("F:\\Netapp Trace\\Jerry\\UMNtrace3_15_11.csv","F:\\Netapp Trace\\config\\config1.txt","F:\\Netapp Trace\\Jerry\\UMNtrace3_15_11.txt","F:\\Netapp Trace\\Jerry\\UMNtrace3_15_11.log");
+	//analyze("F:\\Netapp Trace\\By lun_ssid\\UMNtrace1_10.csv","F:\\Netapp Trace\\config\\config1.txt","F:\\Netapp Trace\\By lun_ssid\\UMNtrace1_10.txt","F:\\Netapp Trace\\By lun_ssid\\UMNtrace1_10.log");
+	//analyze("F:\\Netapp Trace\\By lun_ssid\\UMNtrace1_13.csv","F:\\Netapp Trace\\config\\config1.txt","F:\\Netapp Trace\\By lun_ssid\\UMNtrace1_13.txt","F:\\Netapp Trace\\By lun_ssid\\UMNtrace1_13.log");
+	/*analyze("F:\\Netapp Trace\\By lun_ssid\\UMNtrace3_8.csv","F:\\Netapp Trace\\config\\config1.txt","F:\\Netapp Trace\\By lun_ssid\\UMNtrace3_8.txt","F:\\Netapp Trace\\By lun_ssid\\UMNtrace3_8.log");
+	analyze("F:\\Netapp Trace\\By lun_ssid\\UMNtrace3_9.csv","F:\\Netapp Trace\\config\\config1.txt","F:\\Netapp Trace\\By lun_ssid\\UMNtrace3_9.txt","F:\\Netapp Trace\\By lun_ssid\\UMNtrace3_9.log");
+	analyze("F:\\Netapp Trace\\By lun_ssid\\UMNtrace3_12.csv","F:\\Netapp Trace\\config\\config1.txt","F:\\Netapp Trace\\By lun_ssid\\UMNtrace3_12.txt","F:\\Netapp Trace\\By lun_ssid\\UMNtrace3_12.log");
+	analyze("F:\\Netapp Trace\\By lun_ssid\\UMNtrace3_13.csv","F:\\Netapp Trace\\config\\config1.txt","F:\\Netapp Trace\\By lun_ssid\\UMNtrace3_13.txt","F:\\Netapp Trace\\By lun_ssid\\UMNtrace3_13.log");
+	analyze("F:\\Netapp Trace\\By lun_ssid\\UMNtrace3_14.csv","F:\\Netapp Trace\\config\\config1.txt","F:\\Netapp Trace\\By lun_ssid\\UMNtrace3_14.txt","F:\\Netapp Trace\\By lun_ssid\\UMNtrace3_14.log");
+	analyze("F:\\Netapp Trace\\By lun_ssid\\UMNtrace3_15.csv","F:\\Netapp Trace\\config\\config1.txt","F:\\Netapp Trace\\By lun_ssid\\UMNtrace3_15.txt","F:\\Netapp Trace\\By lun_ssid\\UMNtrace3_15.log");*/
 }
 
 int analyze(char *trace,char *config,char *output,char *log)
