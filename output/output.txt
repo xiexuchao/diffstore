@@ -1,0 +1,76 @@
+Trace file                    	/home/trace/UMNtrace1_14.csv
+
+------Information of Storage Pool------
+Size of SCM (GB)              	1
+Size of SSD (GB)              	1024
+Size of HDD (GB)              	51200
+Size of chunk (MB)            	256
+Size of stream                	16
+Size of stride (KB)           	32
+Size of interval              	100
+Chunk sum                     	208900
+Chunk max                     	271
+Chunk min                     	0
+Chunk all                     	2                   	(0.000957%)
+Window type                   	0
+Window size (MB)              	20480
+Threshold for R/W             	0.850000
+Threshold for Seq.CBR(Byte)   	0.800000
+Threshold for Seq.CAR(Access) 	0.800000
+Threshold for Seq.size (KB)   	2048
+Threshold for Inactive        	0
+Threshold for Intensive       	0
+
+------Information of IO Trace------
+Trace start time (s)          	2555.602019
+Trace end time (s)            	3060.055352
+Num of windows                	1
+----IO Request--
+Num of all  IO                	24
+Num of read IO                	24                  	(100.000000%)
+Num of wrte IO                	0                   	(0.000000%)
+Size of all  IO (MB)          	0.414062
+Size of read IO (MB)          	0.414062            	(100.000000%)
+Size of wrte IO (MB)          	0.000000            	(0.000000%)
+Avg Size of all  IO (MB)      	0.017253
+Avg Size of read IO (MB)      	0.017253
+Avg Size of wrte IO (MB)      	-nan
+----Sequential IO Request--
+Num of Seq. all  IO           	0
+Num of Seq. read IO           	0                   	(-nan%)
+Num of Seq. wrte IO           	0                   	(-nan%)
+Size of Seq. all  IO (MB)     	0.000000
+Size of Seq. read IO (MB)     	0.000000            	(-nan%)
+Size of Seq. wrte IO (MB)     	0.000000            	(-nan%)
+Avg Size of Seq. all  IO (MB) 	-nan
+Avg Size of Seq. read IO (MB) 	-nan
+Avg Size of Seq. wrte IO (MB) 	-nan
+----Sequential Stream--
+Num of Seq. all  stream       	0
+Num of Seq. read stream       	0                   	(-nan%)
+Num of Seq. wrte stream       	0                   	(-nan%)
+Avg Size of Seq. all  stream  	-nan MB
+Avg Size of Seq. read stream  	-nan MB
+Avg Size of Seq. wrte stream  	-nan MB
+
+------Information of IO Pattern Ratio------
+[non_access]
+0.000000 
+[inactive]
+0.000000 
+[seq_intensive]
+0.000000 
+[seq_less_intensive]
+0.000000 
+[random_intensive]
+1.000000 
+[less_intensive]
+0.000000 
+
+------Information of Time in Each Window------
+Time in window 0         	 504.453333     	2
+
+------Information of IO Pattern in Each Window------
+CHUNK_ID  	PATTERN_HISTORY
+0         	R
+271       	R
