@@ -50,124 +50,129 @@
 #define PATTERN_RANDOM_LESS_INTENSIVE_H		'h'
 
 struct pool_info{
-	unsigned int size_scm;
-	unsigned int size_ssd;
-	unsigned int size_hdd;
-	unsigned int size_chunk;
+    unsigned int size_scm;
+    unsigned int size_ssd;
+    unsigned int size_hdd;
+    unsigned int size_chunk;
 
-	unsigned int size_stream;	//sequential detection
-	unsigned int size_stride;
-	unsigned int size_interval;
-	
-	unsigned int chunk_sum;	    //total in storage pool
-	unsigned int chunk_max;
-	unsigned int chunk_min;
-	unsigned int chunk_all;	    //chunks accessed in trace file
-	unsigned int chunk_win;	    //chunks accessed in one window
+    unsigned int size_stream;	//sequential detection
+    unsigned int size_stride;
+    unsigned int size_interval;
 
-	unsigned int window_type;
-	unsigned int window_size;
-	unsigned int window_sum;
-	long long window_time_start;		// ns
-	long long window_time_end;			// ns
-	
-	double threshold_rw;
-	double threshold_cbr;
-	double threshold_car;
-	unsigned int threshold_size;
-	unsigned int threshold_inactive;
-	unsigned int threshold_intensive;
+    unsigned int chunk_sum;	    //total in storage pool
+    unsigned int chunk_max;
+    unsigned int chunk_min;
+    unsigned int chunk_all;	    //chunks accessed in trace file
+    unsigned int chunk_win;	    //chunks accessed in one window
+    unsigned int chunk_scm;
+    unsigned int chunk_ssd;
+    unsigned int chunk_hdd;
 
+    unsigned int window_type;
+    unsigned int window_size;
+    unsigned int window_sum;
+    long long window_time_start;		// ns
+    long long window_time_end;			// ns
 
-	long long time_start;
-	long long time_end;
+    double threshold_rw;
+    double threshold_cbr;
+    double threshold_car;
+    unsigned int threshold_size;
+    unsigned int threshold_inactive;
+    unsigned int threshold_intensive;
 
-	unsigned int req_sum_all;		// IO num
-	unsigned int req_sum_read;
-	unsigned int req_sum_write;
-	long double req_size_all;		// IO size
-	long double req_size_read;
-	long double req_size_write;
-	
-	unsigned int seq_sum_all;		// Seq. IO num
-	unsigned int seq_sum_read;
-	unsigned int seq_sum_write;
-	long double	seq_size_all;		// Seq. IO size
-	long double seq_size_read;
-	long double seq_size_write;
-	
-	unsigned int seq_stream_all;	// Seq. stream num
-	unsigned int seq_stream_read;
-	unsigned int seq_stream_write;
+    long long time_start;
+    long long time_end;
 
-	long double window_time[SIZE_ARRAY];// s
-	unsigned int chunk_access[SIZE_ARRAY];
+    unsigned int req_sum_all;		// IO num
+    unsigned int req_sum_read;
+    unsigned int req_sum_write;
+    long double req_size_all;		// IO size
+    long double req_size_read;
+    long double req_size_write;
 
-	double pattern_inactive[SIZE_ARRAY];
-	double pattern_non_access[SIZE_ARRAY];
-	double pattern_seq_intensive[SIZE_ARRAY];
-	double pattern_seq_less_intensive[SIZE_ARRAY];
-	double pattern_random_intensive[SIZE_ARRAY];
-	double pattern_random_less_intensive[SIZE_ARRAY];
-	char buffer[SIZE_BUFFER];
+    unsigned int seq_sum_all;		// Seq. IO num
+    unsigned int seq_sum_read;
+    unsigned int seq_sum_write;
+    long double	seq_size_all;		// Seq. IO size
+    long double seq_size_read;
+    long double seq_size_write;
 
-	char filename_trace[100];
-	char filename_output[100];
-	char filename_config[100];
-	char filename_log[100];
-	FILE *file_trace;
-	FILE *file_output;
-	FILE *file_config;
-	FILE *file_log;
+    unsigned int seq_stream_all;	// Seq. stream num
+    unsigned int seq_stream_read;
+    unsigned int seq_stream_write;
 
-	struct chunk_info	*chunk;
-	struct request_info *req;
-	struct stream_info	*stream;
-	struct map_info		*map;
-	struct record_info	*record_win;
-	struct record_info	*record_all;
-};
+    long double window_time[SIZE_ARRAY];// s
+    unsigned int chunk_access[SIZE_ARRAY];
+
+    double pattern_inactive[SIZE_ARRAY];
+    double pattern_non_access[SIZE_ARRAY];
+    double pattern_seq_intensive[SIZE_ARRAY];
+    double pattern_seq_less_intensive[SIZE_ARRAY];
+    double pattern_random_intensive[SIZE_ARRAY];
+    double pattern_random_less_intensive[SIZE_ARRAY];
+    char buffer[SIZE_BUFFER];
+
+    char filename_trace[100];
+    char filename_output[100];
+    char filename_config[100];
+    char filename_log[100];
+    FILE *file_trace;
+    FILE *file_output;
+    FILE *file_config;
+    FILE *file_log;
+
+    struct chunk_info	*chunk;
+    struct request_info *req;
+    struct stream_info	*stream;
+    struct map_info		*map;
+    struct record_info	*record_win;
+    struct record_info	*record_all;
+    };
 
 struct chunk_info{
-	char history_pattern[SIZE_ARRAY];
-	short history_migration[SIZE_ARRAY];
-	
-	unsigned int pattern;
-	unsigned int location;	//SCM,SSD OR HDD
+    char history_pattern[SIZE_ARRAY];
+    short history_migration[SIZE_ARRAY];
 
-	/*information in a window*/
-	unsigned int req_sum_all;		// IO num
-	unsigned int req_sum_read;
-	unsigned int req_sum_write;
-	long double req_size_all;		// IO size
-	long double req_size_read;
-	long double req_size_write;
-	
-	unsigned int seq_sum_all;		// Seq. IO num
-	unsigned int seq_sum_read;
-	unsigned int seq_sum_write;
-	unsigned int seq_stream_all;	// Seq. stream num
-	unsigned int seq_stream_read;
-	unsigned int seq_stream_write;
-	long double	seq_size_all;		// Seq. IO size
-	long double seq_size_read;
-	long double seq_size_write;
+    unsigned int pattern;
+    unsigned int pattern_last;
+    unsigned int location;	//SCM,SSD OR HDD
+    unsigned int location_next;
+
+    /*information in a window*/
+    unsigned int req_sum_all;		// IO num
+    unsigned int req_sum_read;
+    unsigned int req_sum_write;
+    long double req_size_all;		// IO size
+    long double req_size_read;
+    long double req_size_write;
+
+    unsigned int seq_sum_all;		// Seq. IO num
+    unsigned int seq_sum_read;
+    unsigned int seq_sum_write;
+    unsigned int seq_stream_all;	// Seq. stream num
+    unsigned int seq_stream_read;
+    unsigned int seq_stream_write;
+    long double	seq_size_all;		// Seq. IO size
+    long double seq_size_read;
+    long double seq_size_write;
 };
 
 struct request_info{
-	long long time;
-	long long lba;
-	unsigned int type;//0->Read,1->Write
-	unsigned int size;
+    long long time;
+    long long lba;
+    unsigned int type;//0->Read,1->Write
+    unsigned int size;
 };
 
 struct map_info{
-	unsigned int lcn;	//logical chunk number
-	unsigned int pcn;	//physical chunk number
+    unsigned int lcn;	//logical chunk number
+    unsigned int pcn;	//physical chunk number
+    unsigned int location;
 };
 
 struct record_info{
-	unsigned int accessed;//accessed or not in a window
+    unsigned int accessed;//accessed or not in a window
 };
 //initialize.c
 void load_parameters(struct pool_info *pool,char *config);
