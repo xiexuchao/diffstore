@@ -161,17 +161,6 @@ struct request_info{
 	unsigned int size;
 };
 
-/*Sequential Accesses Detection*/
-struct stream_info{
-	unsigned int chk_id;
-	unsigned int type;	//read or write
-	unsigned int sum;	//IO requests absorbed in
-	unsigned int size;	//Sectors(512Bytes)
-	long long min;		//start lba
-	long long max;		//current max lba
-	long long time;		//time when the first req arrived
-};
-
 struct map_info{
 	unsigned int lcn;	//logical chunk number
 	unsigned int pcn;	//physical chunk number
@@ -191,8 +180,6 @@ int get_request_netapp(struct pool_info *pool);
 void update_statistics(struct pool_info *pool);
 void print_statistics(struct pool_info *pool);
 void alloc_assert(void *p,char *s);
-void seq_detection(struct pool_info *pool);
-void flush_stream(struct pool_info *pool);
 void print_log(struct pool_info *pool,unsigned int i);
 
 int analyze(char *trace,char *config,char *output,char *log);

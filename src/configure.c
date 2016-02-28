@@ -1,4 +1,5 @@
 #include "pool.h"
+#include "seq_detector.h"
 
 void load_parameters(struct pool_info *pool,char *config)
 {
@@ -50,7 +51,7 @@ void load_parameters(struct pool_info *pool,char *config)
 			sscanf(buf+value,"%d",&pool->size_stride);
 		else if(strcmp(buf,"size of interval")==0)
 			sscanf(buf+value,"%d",&pool->size_interval);
-		memset(buf,0,SIZE_BUFFER);
+		memset(buf,0,sizeof(char)*SIZE_BUFFER);
 	}
 	fclose(pool->file_config);
 }

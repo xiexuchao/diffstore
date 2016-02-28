@@ -1,4 +1,5 @@
 #include "pool.h"
+#include "seq_detector.h"
 
 int main()
 {
