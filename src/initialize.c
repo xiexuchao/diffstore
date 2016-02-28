@@ -2,7 +2,7 @@
 
 void load_parameters(struct pool_info *pool,char *config)
 {
-	int i,name,value;
+	int name,value;
 	char buf[SIZE_BUFFER];
 	char *ptr;
 	

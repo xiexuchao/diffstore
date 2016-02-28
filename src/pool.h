@@ -1,3 +1,6 @@
+#ifndef _POOL_H
+#define _POOL_H
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -17,22 +20,20 @@
 #define SIZE_BUFFER 200
 #define SIZE_ARRAY	250
 
-#define WINDOW_DATA		0		//GB IO SIZE
-#define WINDOW_TIME		1		//MINUTES
-#define	WINDOW_REQ		2		//K IO REQ.
+#define WINDOW_DATA	0		//GB IO SIZE
+#define WINDOW_TIME	1		//MINUTES
+#define	WINDOW_REQ	2		//K IO REQ.
 
 //  A list of IO patterns. The decision depends on the model (e.g. chunk movement between two pools
 //  or among three pools.
 
-#define PATTERN_UNKNOWN						' '		//Intial pattern
-
-#define PATTERN_NON_ACCESS					'_'		//Inactive data
-
-#define PATTERN_INACTIVE_R					'I'		//Random-read
-#define PATTERN_INACTIVE_W					'i'		//Random-write -->SSD
+#define PATTERN_UNKNOWN						' '
+#define PATTERN_NON_ACCESS					'_'
+#define PATTERN_INACTIVE_R					'I'
+#define PATTERN_INACTIVE_W					'i'
 #define PATTERN_INACTIVE_H					'!'
 
-#define PATTERN_SEQ_INTENSIVE_R				'1'		//SEQ
+#define PATTERN_SEQ_INTENSIVE_R				'1'
 #define PATTERN_SEQ_INTENSIVE_W				'2'	
 #define PATTERN_SEQ_INTENSIVE_H				'3'	
 
@@ -40,12 +41,12 @@
 #define PATTERN_SEQ_LESS_INTENSIVE_W		'B'
 #define PATTERN_SEQ_LESS_INTENSIVE_H		'C'
 
-#define PATTERN_RANDOM_INTENSIVE_R			'R'		//Most-intensive-read | decision: SSD, SCM?
-#define PATTERN_RANDOM_INTENSIVE_W			'W'		//Most-intensive-write | decision: HOT-->SCM
-#define PATTERN_RANDOM_INTENSIVE_H			'H'		//Hybrid-pattern of high IOPS
+#define PATTERN_RANDOM_INTENSIVE_R			'R'	
+#define PATTERN_RANDOM_INTENSIVE_W			'W'
+#define PATTERN_RANDOM_INTENSIVE_H			'H'
 
-#define PATTERN_RANDOM_LESS_INTENSIVE_R		'r'		//Random-read
-#define PATTERN_RANDOM_LESS_INTENSIVE_W		'w'		//Random-write -->SSD
+#define PATTERN_RANDOM_LESS_INTENSIVE_R		'r'	
+#define PATTERN_RANDOM_LESS_INTENSIVE_W		'w'	
 #define PATTERN_RANDOM_LESS_INTENSIVE_H		'h'
 
 struct pool_info{
@@ -53,15 +54,16 @@ struct pool_info{
 	unsigned int size_ssd;
 	unsigned int size_hdd;
 	unsigned int size_chunk;
+
 	unsigned int size_stream;	//sequential detection
 	unsigned int size_stride;
 	unsigned int size_interval;
 	
-	unsigned int chunk_sum;	//total in storage pool
+	unsigned int chunk_sum;	    //total in storage pool
 	unsigned int chunk_max;
 	unsigned int chunk_min;
-	unsigned int chunk_all;	//all accessed
-	unsigned int chunk_win;	//in one window
+	unsigned int chunk_all;	    //chunks accessed in trace file
+	unsigned int chunk_win;	    //chunks accessed in one window
 
 	unsigned int window_type;
 	unsigned int window_size;
@@ -194,3 +196,5 @@ void flush_stream(struct pool_info *pool);
 void print_log(struct pool_info *pool,unsigned int i);
 
 int analyze(char *trace,char *config,char *output,char *log);
+
+#endif

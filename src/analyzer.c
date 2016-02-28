@@ -1,14 +1,15 @@
 #include "pool.h"
 
-void main()
+int main()
 {
     analyze("/home/trace/UMNtrace1_14.csv","../config/config1.txt","../output/output.txt","../log/log.txt");
+    return SUCCESS;
 }
 
 int analyze(char *trace,char *config,char *output,char *log)
 {
 	unsigned int i,chunk_num;
-	unsigned int size_in_window=0,req_in_window=0,chk_in_window=0;
+	unsigned int size_in_window=0,req_in_window=0;
 	long double time_in_window=0;
 	double i_non_access=0,i_inactive=0,i_seq_intensive=0,i_seq_less_intensive=0,i_random_intensive=0,i_random_less_intensive=0;
 
@@ -42,7 +43,7 @@ int analyze(char *trace,char *config,char *output,char *log)
 			pool->window_time_end=pool->req->time;
 			
 			//THE CURRENT WINDOW IS FULL
-			if((size_in_window>=pool->window_size*2048)||(feof(pool->file_trace)!=0)&&(size_in_window>0))
+			if((size_in_window>=pool->window_size*2048)||((feof(pool->file_trace)!=0)&&(size_in_window>0)))
 			{
 				flush_stream(pool);	//Flush information in POOL->STREAMS into each Chunks
 				/*Pattern Detection*/
